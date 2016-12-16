@@ -5,5 +5,5 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-docker run --cap-add=SYS_ADMIN --rm -it -v $1:/source/proftpd -v $2:/results a925653a8b89 /usr/bin/mbs-manager build_module_locally file:////source/$(basename $1)?#master
+docker run --cap-add=SYS_ADMIN --rm -it -v $1:/source/proftpd -v $2:/results asamalik/build-module /usr/bin/mbs-manager build_module_locally file:////source/$(basename $1)?#master
 
