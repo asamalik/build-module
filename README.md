@@ -4,7 +4,7 @@ An easy way to **build modules for the [Fedora Modularity](https://fedoraproject
 
 This is an OCI container image with the [Module Build Service](https://pagure.io/fm-orchestrator) and all its dependencies installed - so you don't have to install everything on your system. The container needs to run with `--cap-add=SYS_ADMIN` so it can use chroot your machine to build the module in Mock.
 
-It supports the latest [modulemd](https://pagure.io/modulemd) specification.
+It supports the latest (v1.0) [modulemd](https://pagure.io/modulemd) specification.
 
 ## Usage
 
