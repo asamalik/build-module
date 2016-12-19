@@ -83,9 +83,7 @@ class BaseConfiguration(object):
     AMQ_PRIVATE_KEY_FILE = '/etc/module_build_service/msg-m8y-client.key'
     AMQ_TRUSTED_CERT_FILE = '/etc/module_build_service/Root-CA.crt'
 
-    MOCK_CONFIG="base-runtime"
     MOCK_RESULTSDIR="/results/"
-
 
 class DevConfiguration(BaseConfiguration):
     DEBUG = True
