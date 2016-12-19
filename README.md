@@ -1,14 +1,16 @@
 # Module builder
 
-An easy way to build a module on any platform!
+An easy way to build a modules for the [Fedora Modularity](https://fedoraproject.org/wiki/Modularity) project. This is an OCI container image with the [Module Build Service](https://pagure.io/fm-orchestrator) and all its dependencies installed - so you don't have to install everything on your system. The container needs to run with `--cap-add=SYS_ADMIN` so it can use chroot your machine to build the module in Mock.
+
+It supports the latest [modulemd](https://pagure.io/modulemd) specification.
 
 ## Usage
 
 ```
-$ ./build_module /local/module/git/repo/ /results/directory/
+$ ./build_module /module/git/repo /results/directory
 ```
 
-Paths must be absolute and the name of your module repository must match the name of your modulemd file.
+Please use **absolute paths** and make sure that the name of your module repository and the modulemd file matches the name of your module.
 
 ### Example
 
@@ -22,4 +24,4 @@ $ ./build_module $(pwd)/proftpd $(pwd)/results
 
 ## Requirements
 
-You only need to have Docker running on your system.
+You need to have Docker running on your system. [Learn about Docker on Fedora](https://developer.fedoraproject.org/tools/docker/about.html).
