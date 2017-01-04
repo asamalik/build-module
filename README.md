@@ -24,6 +24,16 @@ $ mkdir results
 $ ./build_module $(pwd)/proftpd $(pwd)/results
 ```
 
+### SELinux problem
+
+If you got the following error:
+
+```
+2017-01-04 14:20:30,244 - module_build_service - WARNING - fatal: '//source/proftpd' does not appear to be a git repository
+```
+
+It's because my script and SELinux don't like each other. The strage thing is that you don't even get a notification from SELinux. In the meantime, before I (or someone) solve this issue, you need to use `setenforce 0` to workaround this issue. :( 
+
 ## Requirements
 
 You need to have Docker running on your system. [Learn about Docker on Fedora](https://developer.fedoraproject.org/tools/docker/about.html).
