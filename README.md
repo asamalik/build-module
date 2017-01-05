@@ -24,15 +24,9 @@ $ mkdir results
 $ ./build_module $(pwd)/proftpd $(pwd)/results
 ```
 
-### SELinux problem
+### SELinux notes
 
-If you got the following error:
-
-```
-2017-01-04 14:20:30,244 - module_build_service - WARNING - fatal: '//source/proftpd' does not appear to be a git repository
-```
-
-It's because my script and SELinux don't like each other. The strage thing is that you don't even get a notification from SELinux. In the meantime, before I (or someone) solve this issue, you need to use `setenforce 0` to workaround this issue. :( 
+If SELinux is enabled, the script instructs docker to (re)label the two bind-mounted directories in order that they are accessible from within the container. Take extra care not to specify directories you don't want relabeled here.
 
 ## Requirements
 
