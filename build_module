@@ -5,7 +5,30 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-module_name="${1##*/}"
+module_repo="$(readlink -e "$1")"
+if [ $? -ne 0 ]; then
+    echo "Problem accessing module repository: $1" >&2
+    exit 1
+fi
+
+module_name="${module_repo##*/}"
+if [ -z "$module_name" ]; then
+    echo "Can't determine module name from repository: $1" >&2
+    exit 1
+fi
+
+if [ ! -d "$2" ]; then
+    if ! mkdir "$2"; then
+        echo "Can't create results directory: $2" >&2
+        exit 1
+    fi
+fi
+
+results_dir="$(readlink -e "$2")"
+if [ $? -ne 0 ]; then
+    echo "Problem accessing results directory: $2" >&2
+    exit 1
+fi
 
 label_flag=
 getenforce_out="$(getenforce 2>/dev/null)"
@@ -13,5 +36,5 @@ if [ $? -eq 0 -a "$getenforce_out" != "Disabled" ]; then
     label_flag=:z
 fi
 
-docker run --cap-add=SYS_ADMIN --rm -it -v "$1:/source/${module_name}${label_flag}" -v "$2:/results${label_flag}" asamalik/build-module /usr/bin/mbs-manager build_module_locally "file:////source/${module_name}?#master"
+docker run --cap-add=SYS_ADMIN --rm -it -v "${module_repo}:/source/${module_name}${label_flag}" -v "${results_dir}:/results${label_flag}" asamalik/build-module /usr/bin/mbs-manager build_module_locally "file:////source/${module_name}?#master"
 

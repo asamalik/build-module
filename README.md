@@ -12,7 +12,7 @@ It supports the latest (v1.0) [modulemd](https://pagure.io/modulemd) specificati
 $ ./build_module /module/git/repo /results/directory
 ```
 
-Please use **absolute paths** and make sure that the name of your module repository and the modulemd file matches the name of your module.
+Please make sure that the name of your module repository and the modulemd file matches the name of your module.
 
 ### Example
 
@@ -20,8 +20,7 @@ Try this with an example module:
 
 ```
 $ git clone https://github.com/asamalik/fake-proftpd-module-image proftpd
-$ mkdir results
-$ ./build_module $(pwd)/proftpd $(pwd)/results
+$ ./build_module ./proftpd ./results
 ```
 
 ### SELinux notes
