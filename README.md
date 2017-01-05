@@ -12,7 +12,7 @@ It supports the latest (v1.0) [modulemd](https://pagure.io/modulemd) specificati
 $ ./build_module /module/git/repo /results/directory
 ```
 
-Please use **absolute paths** and make sure that the name of your module repository and the modulemd file matches the name of your module.
+Please make sure that the name of your module repository and the modulemd file matches the name of your module.
 
 ### Example
 
@@ -20,19 +20,34 @@ Try this with an example module:
 
 ```
 $ git clone https://github.com/asamalik/fake-proftpd-module-image proftpd
-$ mkdir results
-$ ./build_module $(pwd)/proftpd $(pwd)/results
+$ ./build_module ./proftpd ./results
 ```
 
-### SELinux problem
+### SELinux notes
 
-If you got the following error:
+If SELinux is enabled, the script instructs docker to (re)label the two bind-mounted directories in order that they are accessible from within the container. Take extra care not to specify directories you don't want relabeled here.
+
+Unfortunately, all is not yet well with SELinux and running mock inside docker. If SELinux is set to enforcing, you'll likely get an AVC denial error like this:
 
 ```
-2017-01-04 14:20:30,244 - module_build_service - WARNING - fatal: '//source/proftpd' does not appear to be a git repository
+SELinux is preventing mock from create access on the blk_file loop0.
+
+
+*****  Plugin catchall (100. confidence) suggests   **************************
+
+If you believe that mock should be allowed create access on the loop0 blk_file by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do
+allow this access for now by executing:
+# ausearch -c 'mock' --raw | audit2allow -M my-mock
+# semodule -X 300 -i my-mock.pp
+
+...
+
 ```
 
-It's because my script and SELinux don't like each other. The strage thing is that you don't even get a notification from SELinux. In the meantime, before I (or someone) solve this issue, you need to use `setenforce 0` to workaround this issue. :( 
+While we work on a fix for this issue, please set SELinux to permissive mode by executing `setenforce 0` before running the script. Don't forget changing it back after you're done: `setenforce 1`
 
 ## Requirements
 
