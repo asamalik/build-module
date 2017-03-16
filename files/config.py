@@ -9,6 +9,9 @@ dbdir = path.abspath(path.join(confdir, '..')) if confdir.endswith('conf') \
 
 
 class BaseConfiguration(object):
+    MOCK_RESULTSDIR="/results/"
+
+
     DEBUG = False
     # Make this random (used to generate session keys)
     SECRET_KEY = '74d9e9f9cd40e66fc6c4c2e9987dce48df3ce98542529fd0'
@@ -25,16 +28,19 @@ class BaseConfiguration(object):
 
     SYSTEM = 'koji'
     MESSAGING = 'fedmsg'  # or amq
+    MESSAGING_TOPIC_PREFIX = ['org.fedoraproject.prod']
     KOJI_CONFIG = '/etc/module-build-service/koji.conf'
     KOJI_PROFILE = 'koji'
     KOJI_ARCHES = ['i686', 'armv7hl', 'x86_64']
     KOJI_PROXYUSER = True
     KOJI_REPOSITORY_URL = 'https://kojipkgs.stg.fedoraproject.org/repos'
+    KOJI_TAG_PREFIXES = ['module']
     COPR_CONFIG = '/etc/module-build-service/copr.conf'
     PDC_URL = 'http://modularity.fedorainfracloud.org:8080/rest_api/v1'
     PDC_INSECURE = True
     PDC_DEVELOP = True
-    SCMURLS = ["git://pkgs.stg.fedoraproject.org/modules/", "file://"]
+    SCMURLS = ["git://pkgs.stg.fedoraproject.org/modules/"]
+    YAML_SUBMIT_ALLOWED = False
 
     # How often should we resort to polling, in seconds
     # Set to zero to disable polling
@@ -49,6 +55,9 @@ class BaseConfiguration(object):
     RPMS_DEFAULT_CACHE = 'http://pkgs.fedoraproject.org/repo/pkgs/'
     RPMS_ALLOW_CACHE = False
 
+    MODULES_DEFAULT_REPOSITORY = 'git://pkgs.fedoraproject.org/modules/'
+    MODULES_ALLOW_REPOSITORY = False
+
     SSL_ENABLED = True
     SSL_CERTIFICATE_FILE = '/etc/module-build-service/server.crt'
     SSL_CERTIFICATE_KEY_FILE = '/etc/module-build-service/server.key'
@@ -56,11 +65,13 @@ class BaseConfiguration(object):
 
     PKGDB_API_URL = 'https://admin.stg.fedoraproject.org/pkgdb/api'
 
-    FAS_URL = 'https://admin.stg.fedoraproject.org/accounts'
-    REQUIRE_PACKAGER = True
+    ALLOWED_GROUPS = set([
+        'packager',
+        #'modularity-wg',
+    ])
 
     # Available backends are: console, file, journal.
-    LOG_BACKEND = 'journal'
+    LOG_BACKEND = 'console'
 
     # Path to log file when LOG_BACKEND is set to "file".
     LOG_FILE = 'module_build_service.log'
@@ -83,12 +94,23 @@ class BaseConfiguration(object):
     AMQ_PRIVATE_KEY_FILE = '/etc/module_build_service/msg-m8y-client.key'
     AMQ_TRUSTED_CERT_FILE = '/etc/module_build_service/Root-CA.crt'
 
-    MOCK_RESULTSDIR="/results/"
+    # Disable Client Authorization
+    NO_AUTH = False
+
 
 class DevConfiguration(BaseConfiguration):
     DEBUG = True
     LOG_BACKEND = 'console'
     LOG_LEVEL = 'debug'
+
+    MESSAGING_TOPIC_PREFIX = ['org.fedoraproject.dev', 'org.fedoraproject.stg']
+
+    ALLOWED_GROUPS = set([
+        'packager',
+        # Make this convenient for f2.0 developers
+        'factory2',
+        'modularity-wg',
+    ])
 
     # Global network-related values, in seconds
     NET_TIMEOUT = 5
@@ -107,20 +129,13 @@ class DevConfiguration(BaseConfiguration):
         # user.  See:   https://infrastructure.fedoraproject.org/cgit/ansible.git/commit/?id=a28a93dad75248c30c1792ec35f588c8e317c067
         KOJI_PROXYUSER = False
 
-    REQUIRE_PACKAGER = False
-    # You only need these FAS options if you turn on authorization
-    # with REQUIRE_PACKAGER=True
-    # FAS_USERNAME = 'put your fas username here'
-    # FAS_PASSWORD = 'put your fas password here....'
-    # FAS_PASSWORD = os.environ('FAS_PASSWORD') # you could store it here
-    # FAS_PASSWORD = commands.getoutput('pass your_fas_password').strip()
-
     KOJI_CONFIG = path.join(confdir, 'koji.conf')
     KOJI_PROFILE = 'staging'
     KOJI_ARCHES = ['x86_64']
     KOJI_REPOSITORY_URL = 'http://kojipkgs.stg.fedoraproject.org/repos'
 
-    OIDC_CLIENT_SECRETS = "client_secrets.json"
+    OIDC_CLIENT_SECRETS = path.join(confdir, 'client_secrets.json')
+    OIDC_REQUIRED_SCOPE = 'https://mbs.fedoraproject.org/oidc/submit-build'
 
     SSL_CERTIFICATE_FILE = path.join(confdir, 'server.crt')
     SSL_CERTIFICATE_KEY_FILE = path.join(confdir, 'server.key')
@@ -146,5 +161,4 @@ class TestConfiguration(BaseConfiguration):
 
 
 class ProdConfiguration(BaseConfiguration):
-    FAS_USERNAME = 'TODO'
-    # FAS_PASSWORD = 'another password'
+    pass
