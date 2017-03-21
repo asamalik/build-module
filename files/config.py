@@ -33,13 +33,13 @@ class BaseConfiguration(object):
     KOJI_PROFILE = 'koji'
     KOJI_ARCHES = ['i686', 'armv7hl', 'x86_64']
     KOJI_PROXYUSER = True
-    KOJI_REPOSITORY_URL = 'https://kojipkgs.stg.fedoraproject.org/repos'
+    KOJI_REPOSITORY_URL = 'https://kojipkgs.fedoraproject.org/repos'
     KOJI_TAG_PREFIXES = ['module']
     COPR_CONFIG = '/etc/module-build-service/copr.conf'
-    PDC_URL = 'http://modularity.fedorainfracloud.org:8080/rest_api/v1'
+    PDC_URL = 'http://pdc.fedoraproject.org/rest_api/v1'
     PDC_INSECURE = True
     PDC_DEVELOP = True
-    SCMURLS = ["git://pkgs.stg.fedoraproject.org/modules/"]
+    SCMURLS = ["git://pkgs.fedoraproject.org/modules/"]
     YAML_SUBMIT_ALLOWED = False
 
     # How often should we resort to polling, in seconds
@@ -63,7 +63,7 @@ class BaseConfiguration(object):
     SSL_CERTIFICATE_KEY_FILE = '/etc/module-build-service/server.key'
     SSL_CA_CERTIFICATE_FILE = '/etc/module-build-service/cacert.pem'
 
-    PKGDB_API_URL = 'https://admin.stg.fedoraproject.org/pkgdb/api'
+    PKGDB_API_URL = 'https://admin.fedoraproject.org/pkgdb/api'
 
     ALLOWED_GROUPS = set([
         'packager',
@@ -132,7 +132,7 @@ class DevConfiguration(BaseConfiguration):
     KOJI_CONFIG = path.join(confdir, 'koji.conf')
     KOJI_PROFILE = 'staging'
     KOJI_ARCHES = ['x86_64']
-    KOJI_REPOSITORY_URL = 'http://kojipkgs.stg.fedoraproject.org/repos'
+    KOJI_REPOSITORY_URL = 'http://kojipkgs.fedoraproject.org/repos'
 
     OIDC_CLIENT_SECRETS = path.join(confdir, 'client_secrets.json')
     OIDC_REQUIRED_SCOPE = 'https://mbs.fedoraproject.org/oidc/submit-build'
